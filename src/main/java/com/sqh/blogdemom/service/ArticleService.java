@@ -34,7 +34,7 @@ public interface ArticleService {
 
     PageInfo<ArticleCustom> findArticleByCategory(int page, int limit, Category category, int status);
 
-    PageInfo<ArticleCustom> findArtileByTag(Integer page, Integer limit, Tag tag, int status);
+    PageInfo<ArticleCustom> findArticleByTag(Integer page, Integer limit, Tag tag, int status);
 
     PageInfo<Article> findArticleByKeywords(String keywords, Integer page, Integer limit);
 

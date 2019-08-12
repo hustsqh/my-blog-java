@@ -14,10 +14,13 @@ import com.sqh.blogdemom.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+@Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class ArticleServiceImpl implements ArticleService {
     private static final String ARTICLE_CACHE_KEY = "'article'";
     private static final String ARTICLE_CACHE_NAME = "articles";
@@ -156,22 +159,32 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Cacheable(value = ARTICLE_CACHE_NAME, key = "'findArticleByCategory'+#page+#limit+#category+#status")
     public PageInfo<ArticleCustom> findArticleByCategory(int page, int limit, Category category, int status) {
-        
+        PageHelper.startPage(page, limit);
+        List<ArticleCustom> list = articleCategoryMapper.findArtileByCategory(category, status);
+        return new PageInfo<>(list);
     }
 
     @Override
-    public PageInfo<ArticleCustom> findArtileByTag(Integer page, Integer limit, Tag tag, int status) {
-        return null;
+    @Cacheable(value = ARTICLE_CACHE_NAME, key = "'findArtileByTag'+#page+#limit+#tag+#status")
+    public PageInfo<ArticleCustom> findArticleByTag(Integer page, Integer limit, Tag tag, int status) {
+        PageHelper.startPage(page, limit);
+        List<ArticleCustom> list = articleTagMapper.findArticleByTag(tag, status);
+        return new PageInfo<>(list);
     }
 
     @Override
+    @Cacheable(value = ARTICLE_CACHE_NAME, key = "'findArticleByKeywords'+#keywords+#page+#limit")
     public PageInfo<Article> findArticleByKeywords(String keywords, Integer page, Integer limit) {
+        PageHelper.startPage(page, limit);
+//        List<ArticleCustom> list = new ArrayList<>();
         return null;
     }
 
     @Override
+    @CacheEvict(value = ARTICLE_CACHE_NAME, allEntries = true, beforeInvocation = true)
     public void updateArticleViews(Article article) {
-
+        articleMapper.updateByPrimaryKeySelective(article);
     }
 }

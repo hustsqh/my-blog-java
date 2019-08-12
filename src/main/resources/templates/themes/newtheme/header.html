@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:thSys="" th:fragment="header(title)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="个人博客">
+    <meta name="description" content="description">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/base.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/m.css" rel="stylesheet">
+    <script src="js/modernizr.js"></script>
+    <title>Title</title>
+</head>
+
+<body>
+<header>
+    <div class="logo"><a href="/"><img src="images/logo.png"></a></div>
+    <nav id="nav">
+        <ul>
+            <th:block th:each="menu :${menus}">
+                <li><a th:href="${menu.url}" th:text="${menu.menuname}"></a></li>
+            </th:block>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>
